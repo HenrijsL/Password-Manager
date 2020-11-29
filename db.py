@@ -19,7 +19,7 @@ except mariadb.Error as e:
 conn.autocommit = True
 cursor = conn.cursor(buffered=True)
 
-def masterPassword():
+def master_password():
     cursor.execute("SELECT password FROM master_password")
     if cursor.rowcount == 0:
         password = input("Please create master password : ")
@@ -33,10 +33,10 @@ def masterPassword():
         else:
             return False
 
-def savePassword(url, name, password):
+def save_password(url, name, password):
     cursor.execute("INSERT INTO password (url, name, password) VALUES (?, ?, ?)", (url, name, password))
     return print("\nPassword has been successfully saved")
 
-def getPassword():
+def get_password():
     cursor.execute("SELECT url, name, password FROM password")
     return cursor.fetchall()

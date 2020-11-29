@@ -1,17 +1,16 @@
-import db
-from db import masterPassword
-from menu import createPassword, menu, showPassword
+from db import master_password
+from menu import create_password, menu, show_password
 
-if not masterPassword():
+if not master_password():
     exit()
 
 choice = menu()
 
 while choice.lower() != "q":
     if choice == "1":
-        createPassword()
+        create_password()
     if choice == "2":
-        showPassword()
+        show_password()
     choice = menu()
 
 exit()
