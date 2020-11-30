@@ -1,0 +1,7 @@
+bcrypt==3.2.0
+cffi==1.14.4
+clipboard==0.0.4
+cryptography==3.2.1
+pycparser==2.20
+pyperclip==1.8.1
+six==1.15.0

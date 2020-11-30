@@ -1,3 +1,4 @@
 __pycache__
 secret.key
 password_manager.db
+env
