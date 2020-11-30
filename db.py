@@ -1,40 +1,46 @@
-import mariadb
+import sqlite3
 import bcrypt
 
-# Connect to database
-try:
-    conn = mariadb.connect(
-        user="root",
-        password="",
-        host="localhost",
-        port=3306,
-        database="password_manager"
 
-    )
-except mariadb.Error as e:
-    print(f"Error connecting to MariaDB Platform: {e}")
-    exit()
+conn = sqlite3.connect('password_manager.db')
 
-# Get Cursor
-conn.autocommit = True
-cursor = conn.cursor(buffered=True)
+cursor = conn.cursor()
 
+def create_tables():
+    # Izveido master paroles tabulu ja neeksistē
+    cursor.execute('''CREATE TABLE IF NOT EXISTS master_password (
+                    id integer PRIMARY KEY,
+                    password varchar(255) NOT NULL
+                );''')
+    # Izveido paroļu tabulu ja neeksistē
+    cursor.execute('''CREATE TABLE IF NOT EXISTS password (
+                    id integer PRIMARY KEY,
+                    url varchar(255) NOT NULL,
+                    name varchar(255) NOT NULL,
+                    password binary NOT NULL
+                );''')
+    
+    
 def master_password():
     cursor.execute("SELECT password FROM master_password")
-    if cursor.rowcount == 0:
+    row = cursor.fetchall()
+    if len(row) == 0:
         password = input("Please create master password : ")
         salt = bcrypt.gensalt()
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
         cursor.execute("INSERT INTO master_password (password) VALUES (?)", (hashed_password,))
+        conn.commit()
+        return True
     else:
         password = input("Please enter master password : ")
-        if bcrypt.checkpw(password.encode('utf-8'), cursor.fetchone()[0].encode('utf-8')):
+        if bcrypt.checkpw(password.encode(), row[0][0]):
             return True
         else:
             return False
 
 def save_password(url, name, password):
     cursor.execute("INSERT INTO password (url, name, password) VALUES (?, ?, ?)", (url, name, password))
+    conn.commit()
     return print("\nPassword has been successfully saved")
 
 def get_password():

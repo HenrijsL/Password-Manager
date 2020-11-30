@@ -1,5 +1,7 @@
-from db import master_password
+from db import create_tables, master_password
 from menu import create_password, menu, show_password
+
+create_tables()
 
 if not master_password():
     exit()
